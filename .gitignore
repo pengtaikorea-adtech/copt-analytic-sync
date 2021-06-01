@@ -1,0 +1,9 @@
+# package check
+go.sum
+# build
+*.exe
+# configure
+cron.yaml
+success.yaml
+# test output
+tests/out.*

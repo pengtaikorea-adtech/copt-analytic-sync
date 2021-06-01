@@ -1,0 +1,12 @@
+list:
+  - a
+  - b
+  - c
+maps:
+  eins: 1
+  zwei: 2
+  drei: 3
+nested:
+  first:
+    - second
+    - third

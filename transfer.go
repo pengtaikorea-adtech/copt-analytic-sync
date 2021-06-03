@@ -12,11 +12,7 @@ import (
 
 // Open database connection
 func OpenConnection(conf ConnectionSetting, database string) (*sql.DB, error) {
-	suffix := ""
-	if conf.Driver == "mysql" {
-		suffix = "?parseTime=true"
-	}
-	return sql.Open(conf.Driver, conf.DSN+database+suffix)
+	return sql.Open(conf.Driver, conf.DSN+database)
 }
 
 type TransferTask struct {
@@ -360,7 +356,13 @@ func (tt *TransferTask) copyRows() int {
 		tx.Exec(inserts, row...)
 
 		// record latest index
-		latest = row[successIndex].(string)
+		latest = row[successIndex]
+		// writes for 20
+		if count%20 == 0 {
+			tx.Commit()
+			// restart transaction
+			tx, _ = tt.Target.Begin()
+		}
 	}
 	// close read
 	rss.Close()

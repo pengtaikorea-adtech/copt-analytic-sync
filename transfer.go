@@ -332,9 +332,13 @@ func (tt TransferTask) findSuccessColumnIndex(rss *sql.Rows, index string) int {
 
 func (tt *TransferTask) copyRows() int {
 	// FROM Latest success
-	selects := fmt.Sprintf("SELECT * FROM %s WHERE @p1<[%s] ORDER BY [%s] ASC", tt.Setting.Name, tt.Setting.Index, tt.Setting.Index)
+	selects := fmt.Sprintf("SELECT * FROM [%s] WHERE @p1<[%s] ORDER BY [%s] ASC", tt.Setting.Name, tt.Setting.Index, tt.Setting.Index)
 	// query success index
-	rss, _ := tt.Source.Query(selects, tt.Success)
+	rss, err := tt.Source.Query(selects, tt.Success)
+	// pass
+	if err != nil {
+		return 0
+	}
 	columns, _ := rss.Columns()
 	successIndex := tt.findSuccessColumnIndex(rss, tt.Setting.Index)
 	latest := tt.Success

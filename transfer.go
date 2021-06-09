@@ -65,9 +65,10 @@ func RunTransferTables() {
 			tt.copyRows()
 
 			success[schema][task.Name] = tt.Success
+			// save on every update
+			SaveToYaml(settings.Successor, success)
 		}
 	}
-	SaveToYaml(settings.Successor, success)
 }
 
 // RunTransferViews to duplicate views
